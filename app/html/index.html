@@ -2,17 +2,75 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Frutas y Verduras</title>
+    <title>Actividades</title>
     <link rel="stylesheet" href="../css/index.css">
 </head>
 <body>
     <header>
-        <h1>Frutas y Verduras</h1>
+        <h1>Bienvenidos</h1>
+        <h2>Actividades</h2>
     </header>
-    <div id="agregarProducto" class="boton">Agregar producto</div>
-    <div id="verProductos" class="boton">Ver productos</div>
-    <div id="agregarPedido" class="boton">Agregar pedido</div>
-    <div id="verPedidos" class="boton">Ver pedidos</div>
+    <div id="informarActividad" class="boton">Agregar actividad</div>
+    <div id="verActividades" class="boton">Ver listado de actividades</div>
+    <div id="estadisticas" class="boton">Estadísticas</div>
+
+    <section>
+        <h2>Últimas 5 actividades agregadas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Inicio</th>
+                    <th>Término</th>
+                    <th>Comuna</th>
+                    <th>Sector</th>
+                    <th>Tema</th>
+                    <th>Foto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2025-03-28 12:00</td>
+                    <td>2025-03-28 14:00</td>
+                    <td>Santiago</td>
+                    <td>Beauchef</td>
+                    <td>Escuela de Boxeo</td>
+                    <td><img src="../boxeo.jpg" alt="Escuela de Boxeo" width="100"></td>
+                </tr>
+                <tr>
+                    <td>2025-03-29 19:00</td>
+                    <td>2025-03-29 20:00</td>
+                    <td>Ñuñoa</td>
+                    <td>Plaza</td>
+                    <td>Cómo deshidratar fruta</td>
+                    <td><img src="../frutas.jpg" alt="Deshidratación de fruta" width="100"></td>
+                </tr>
+                <tr>
+                    <td>2022-03-30 18:00</td>
+                    <td>2022-03-30 19:00</td>
+                    <td>Santiago</td>
+                    <td>Parque O'Higgins</td>
+                    <td>Música urbana</td>
+                    <td><img src="../musica.jpg" alt="Música urbana" width="100"></td>
+                </tr>
+                <tr>
+                    <td>2025-04-01 10:00</td>
+                    <td>2025-04-01 12:00</td>
+                    <td>Las Condes</td>
+                    <td>Centro</td>
+                    <td>Curso de cocina</td>
+                    <td><img src="../cocinar.jpg" alt="Curso de cocina" width="100"></td>
+                </tr>
+                <tr>
+                    <td>2025-04-02 15:00</td>
+                    <td>2025-04-02 17:00</td>
+                    <td>La Florida</td>
+                    <td>Centro</td>
+                    <td>Charla sobre nutrición</td>
+                    <td><img src="../nutricion.jpg" alt="Charla de nutrición" width="100"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 
     <script src="../js/index.js"></script>
 </body>

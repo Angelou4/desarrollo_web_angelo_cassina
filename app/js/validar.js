@@ -1,34 +1,16 @@
-function validarTipoProducto() {
-    let tipoProductoSelect = document.getElementById("tipoProducto");
-    if (tipoProductoSelect.value === "") {
-        alert("Por favor, seleccione el tipo de producto.");
+function validarTema() {
+    let temaSelect = document.getElementById("tema");
+    if (temaSelect.value === "") {
+        alert("Por favor, seleccione el tema de la actividad.");
         return false;
     }
     return true;
 }
 
-function validarProducto() {
-    let productoSelect = document.getElementById("producto");
-    if (productoSelect.value === "") {
-        alert("Por favor, seleccione al menos un producto.");
-        return false;
-    }
-    return true;
-}
-
-function validarDescripcion() {
-    let descripcionInput = document.getElementById("descripcion");
-    if (descripcionInput.value.trim() === "") {
-        alert("Por favor, ingrese una descripción.");
-        return false;
-    }
-    return true;
-}
-
-function validarFotos() {
-    let fotosInput = document.getElementById("fotos");
-    if (fotosInput.files.length === 0) {
-        alert("Por favor, seleccione al menos una foto.");
+function validarSector() {
+    let sector = document.getElementById("sector");
+    if (sector.value.trim() !== "" && sector.value.trim().length === 0) {
+        alert("Por favor, ingrese el nombre del lugar donde se realizará la actividad.");
         return false;
     }
     return true;
@@ -52,128 +34,106 @@ function validarComuna() {
     return true;
 }
 
-function validarNombreProductor() {
-    let nombreProductorInput = document.getElementById("nombreProductor");
-    if (nombreProductorInput.value.trim() === "") {
-        alert("Por favor, ingrese el nombre del productor.");
+function validarNombreOrganizador() {
+    let nombre = document.getElementById("nombre");
+    if (nombre.value.trim() === "") {
+        alert("Por favor, ingrese el nombre del organizador.");
         return false;
     }
     return true;
 }
 
-function validarEmailProductor() {
-    let emailProductorInput = document.getElementById("emailProductor");
+function validarEmailOrganizador() {
+    let email = document.getElementById("email");
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailProductorInput.value)) {
+    if (!emailRegex.test(email.value)) {
         alert("Por favor, ingrese un correo electrónico válido.");
         return false;
     }
     return true;
 }
 
-function validarCelularProductor() {
-    let celularProductorInput = document.getElementById("celularProductor");
-    let celularRegex = /^[0-9]{9,15}$/;
-    if (celularProductorInput.value !== "" && !celularRegex.test(celularProductorInput.value)) {
-        alert("Por favor, ingrese un número de celular válido (entre 9 y 15 dígitos).");
+function validarCelularOrganizador() {
+    let celular = document.getElementById("celular");
+    let celularRegex = /^\+\d{3}\.\d{8,}$/; // Ajustado según el patrón del HTML
+    // Solo validar si se ha ingresado un número
+    if (celular.value.trim() !== "" && !celularRegex.test(celular.value)) {
+        alert("Por favor, ingrese un número de celular válido con el formato: +[código de país].[número de celular].");
         return false;
     }
     return true;
 }
 
-function validarNombreComprador() {
-    let nombreCompradorInput = document.getElementById("nombreComprador");
-    if (nombreCompradorInput.value.trim() === "") {
-        alert("Por favor, ingrese el nombre del Comprador.");
+function validarDescripcionActividad() {
+    let descripcion = document.getElementById("descripcion");
+    if (descripcion.value.trim() !== "" && descripcion.value.trim().length === 0) {
+        alert("Por favor, ingrese una descripción de la actividad.");
         return false;
     }
     return true;
 }
 
-function validarEmailComprador() {
-    let emailCompradorInput = document.getElementById("emailComprador");
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailCompradorInput.value)) {
-        alert("Por favor, ingrese un correo electrónico válido.");
+function validarFotos() {
+    let fotos = document.getElementById("fotosContainer").getElementsByTagName("input");
+    if (fotos.length === 0) {
+        alert("Por favor, suba al menos una foto de referencia.");
         return false;
     }
     return true;
 }
 
-function validarCelularComprador() {
-    let celularCompradorInput = document.getElementById("celularComprador");
-    let celularRegex = /^[0-9]{9,15}$/;
-    if (celularCompradorInput.value !== "" && !celularRegex.test(celularCompradorInput.value)) {
-        alert("Por favor, ingrese un número de celular válido (entre 9 y 15 dígitos).");
+function validarContacto() {
+    let contactoSelect = document.getElementById("contacto");
+    // No es necesario hacer validación si no se selecciona nada
+    return true; // Ya no es necesario alertar si el usuario no ha elegido un contacto
+}
+
+function validarTermino() {
+    let termino = document.getElementById("termino");
+    // Solo validamos si se ha ingresado una fecha de término
+    if (termino.value.trim() !== "" && new Date(termino.value) <= new Date(document.getElementById("inicio").value)) {
+        alert("La hora de término debe ser posterior a la hora de inicio.");
         return false;
     }
     return true;
 }
 
-function validarFormularioProducto() {
+function validarFormularioActividad() {
     return (
-        validarTipoProducto() &&
-        validarProducto() &&
-        validarDescripcion() &&
-        validarFotos() &&
+        validarTema() &&
+        validarSector() &&
         validarRegion() &&
         validarComuna() &&
-        validarNombreProductor() &&
-        validarEmailProductor() &&
-        validarCelularProductor()
+        validarNombreOrganizador() &&
+        validarEmailOrganizador() &&
+        validarCelularOrganizador() &&
+        validarDescripcionActividad() &&
+        validarFotos() &&
+        validarContacto() &&
+        validarTermino()
     );
 }
 
-function validarFormularioPedido() {
-    return (
-        validarTipoProducto() &&
-        validarProducto() &&
-        validarDescripcion() &&
-        validarFotos() &&
-        validarRegion() &&
-        validarComuna() &&
-        validarNombreComprador() &&
-        validarEmailComprador() &&
-        validarCelularComprador()
-    );
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    let botonEnviarFormularioProducto = document.getElementById("botonEnviarFormularioProducto");
-    botonEnviarFormularioProducto.addEventListener("click", function(event) {
-        event.preventDefault();
-        if (validarFormularioProducto()) {
-           
-            if (confirm("¿Confirma el registro de este producto?")) {
-                
-                alert("Hemos recibido el registro de producto. Muchas gracias.");
-                window.location.href = "../html/index.html";
-            } else {
-                alert("No se ha registrado el producto. Puede seguir completando el formulario.");
+document.addEventListener("DOMContentLoaded", function () {
+    let botonEnviar = document.getElementById("botonEnviarActividad");
+    if (botonEnviar) {
+        botonEnviar.addEventListener("click", function (event) {
+            event.preventDefault();
+            if (validarFormularioActividad()) {
+                if (confirm("¿Desea registrar esta actividad?")) {
+                    alert("La actividad ha sido registrada exitosamente. ¡Gracias!");
+                    window.location.href = "../html/index.html";
+                } else {
+                    alert("Registro cancelado. Puede continuar completando el formulario.");
+                }
             }
-        }
-    });
-});
+        });
+    }
 
-document.addEventListener("DOMContentLoaded", function() {
-
-    let botonEnviarFormularioPedido = document.getElementById("botonEnviarFormularioPedido");
-    botonEnviarFormularioPedido.addEventListener("click", function(event) {
-        event.preventDefault();
-        if (validarFormularioPedido()) {
-            if (confirm("¿Confirma el registro de este producto?")) {
-                alert("Hemos recibido el registro de producto. Muchas gracias.");
-                window.location.href = "../html/index.html";
-            } else {
-                alert("No se ha registrado el producto. Puede seguir completando el formulario.");
-            }
-        }
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    let botonVolverIndex = document.getElementById("volverIndex");
-    botonVolverIndex.addEventListener("click", function() {
-        window.location.href = "../html/index.html";
-    });
+    let botonVolver = document.getElementById("volverIndex");
+    if (botonVolver) {
+        botonVolver.addEventListener("click", function () {
+            window.location.href = "../html/index.html";
+        });
+    }
 });
