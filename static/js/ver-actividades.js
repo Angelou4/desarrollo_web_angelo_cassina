@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function crearFilasDeActividades() {
         const tbody = document.querySelector("#tablaActividades tbody");
 
-        actividades.forEach(actividad => {
+        actividades.forEach((actividad, index) => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${actividad.inicio}</td>
@@ -62,8 +62,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 <td>${actividad.nombreOrganizador}</td>
                 <td>${actividad.totalFotos}</td>
             `;
+            tr.addEventListener("click", function () {
+                // Cargar rutas según actividad e índice
+                let fotos = Array.from({ length: actividad.totalFotos }, (_, i) => `../imagenes/actividad${index+1}_${i+1}.jpg`);
+                let actividadCompleta = { ...actividad, fotos };
+                localStorage.setItem("actividadSeleccionada", JSON.stringify(actividadCompleta));
+                window.location.href = "../html/detalle-actividad.html";
+            });
             tbody.appendChild(tr);
         });
+
     }
 
     crearFilasDeActividades();

@@ -12,6 +12,22 @@ function mostrarOtroTema() {
     input.style.display = select.value === "otro" ? "block" : "none";
 }
 
+function agregarFoto() {
+    let fotosContainer = document.getElementById("fotosContainer");
+    let totalInputs = fotosContainer.querySelectorAll("input[type='file']").length;
+
+    if (totalInputs >= 5) {
+        alert("Solo se pueden agregar hasta 5 fotos.");
+        return;
+    }
+
+    let nuevoInput = document.createElement("input");
+    nuevoInput.type = "file";
+    nuevoInput.name = "foto";
+    nuevoInput.accept = "image/*";
+    fotosContainer.appendChild(nuevoInput);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     // Establecer la fecha y hora actual como valor predeterminado para el campo de inicio
     const now = new Date();

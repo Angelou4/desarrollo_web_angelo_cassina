@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Actividad</title>
+    <link rel="stylesheet" href="../css/actividades.css">
+    <style>
+        .foto-mini { width: 320px; height: 240px; cursor: pointer; margin: 5px; }
+        .foto-ampliada {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background-color: white;
+            border: 2px solid black;
+            padding: 10px;
+        }
+        .foto-ampliada img {
+            width: 800px;
+            height: 600px;
+        }
+        .fondo-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detalle de la Actividad</h1>
+    <div id="detalleActividad"></div>
+
+    <div id="fondoModal" class="fondo-modal" onclick="cerrarAmpliada()"></div>
+    <div id="fotoAmpliada" class="foto-ampliada">
+        <img id="imagenAmpliada" src="" alt="Foto grande">
+        <div style="text-align: center; margin-top: 10px;">
+            <button onclick="cerrarAmpliada()">Cerrar</button>
+        </div>
+    </div>
+
+    <button onclick="window.location.href='ver-actividades.html'">Volver al listado</button>
+    <button onclick="window.location.href='index.html'">Volver a la portada</button>
+
+    <script>
+        const datos = JSON.parse(localStorage.getItem("actividadSeleccionada"));
+        const contenedor = document.getElementById("detalleActividad");
+
+        if (datos) {
+            contenedor.innerHTML = `
+                <p><strong>Inicio:</strong> ${datos.inicio}</p>
+                <p><strong>Término:</strong> ${datos.termino}</p>
+                <p><strong>Comuna:</strong> ${datos.comuna}</p>
+                <p><strong>Sector:</strong> ${datos.sector}</p>
+                <p><strong>Tema:</strong> ${datos.tema}</p>
+                <p><strong>Nombre Organizador:</strong> ${datos.nombreOrganizador}</p>
+                <p><strong>Fotos:</strong></p>
+                <div id="galeria">
+                    ${datos.fotos.map(foto => `<img class="foto-mini" src="${foto}" onclick="ampliarFoto('${foto}')">`).join('')}
+                </div>
+            `;
+        }
+
+        function ampliarFoto(src) {
+            document.getElementById("imagenAmpliada").src = src;
+            document.getElementById("fondoModal").style.display = "block";
+            document.getElementById("fotoAmpliada").style.display = "block";
+        }
+
+        function cerrarAmpliada() {
+            document.getElementById("fondoModal").style.display = "none";
+            document.getElementById("fotoAmpliada").style.display = "none";
+        }
+    </script>
+</body>
+</html>

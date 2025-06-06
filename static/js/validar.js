@@ -4,6 +4,16 @@ function validarTema() {
         alert("Por favor, seleccione el tema de la actividad.");
         return false;
     }
+
+    if (temaSelect.value === "otro") {
+        let otroTema = document.getElementById("otroTema");
+        let texto = otroTema.value.trim();
+        if (texto.length < 3 || texto.length > 15) {
+            alert("Por favor, describa el tema entre 3 y 15 caracteres.");
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -74,18 +84,30 @@ function validarDescripcionActividad() {
 }
 
 function validarFotos() {
-    let fotos = document.getElementById("fotosContainer").getElementsByTagName("input");
-    if (fotos.length === 0) {
+    let fotos = document.getElementById("fotosContainer").querySelectorAll("input[type='file']");
+    let alMenosUnaSeleccionada = Array.from(fotos).some(input => input.files.length > 0);
+
+    if (!alMenosUnaSeleccionada) {
         alert("Por favor, suba al menos una foto de referencia.");
         return false;
     }
+
     return true;
 }
 
 function validarContacto() {
     let contactoSelect = document.getElementById("contacto");
-    // No es necesario hacer validación si no se selecciona nada
-    return true; // Ya no es necesario alertar si el usuario no ha elegido un contacto
+    let contactoInfo = document.getElementById("contactoInfo");
+
+    if (contactoSelect.value !== "") {
+        let texto = contactoInfo.value.trim();
+        if (texto.length < 4 || texto.length > 50) {
+            alert("Por favor, escriba un ID o URL de contacto válido (entre 4 y 50 caracteres).");
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function validarTermino() {
