@@ -1,161 +1,79 @@
-function validarTema() {
-    let temaSelect = document.getElementById("tema");
-    if (temaSelect.value === "") {
-        alert("Por favor, seleccione el tema de la actividad.");
-        return false;
-    }
-
-    if (temaSelect.value === "otro") {
-        let otroTema = document.getElementById("otroTema");
-        let texto = otroTema.value.trim();
-        if (texto.length < 3 || texto.length > 15) {
-            alert("Por favor, describa el tema entre 3 y 15 caracteres.");
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function validarSector() {
-    let sector = document.getElementById("sector");
-    if (sector.value.trim() !== "" && sector.value.trim().length === 0) {
-        alert("Por favor, ingrese el nombre del lugar donde se realizará la actividad.");
-        return false;
-    }
-    return true;
-}
-
-function validarRegion() {
-    let regionSelect = document.getElementById("region");
-    if (regionSelect.value === "") {
-        alert("Por favor, seleccione la región.");
-        return false;
-    }
-    return true;
-}
-
-function validarComuna() {
-    let comunaSelect = document.getElementById("comuna");
-    if (comunaSelect.value === "") {
-        alert("Por favor, seleccione la comuna.");
-        return false;
-    }
-    return true;
-}
-
-function validarNombreOrganizador() {
-    let nombre = document.getElementById("nombre");
-    if (nombre.value.trim() === "") {
-        alert("Por favor, ingrese el nombre del organizador.");
-        return false;
-    }
-    return true;
-}
-
-function validarEmailOrganizador() {
-    let email = document.getElementById("email");
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.value)) {
-        alert("Por favor, ingrese un correo electrónico válido.");
-        return false;
-    }
-    return true;
-}
-
-function validarCelularOrganizador() {
-    let celular = document.getElementById("celular");
-    let celularRegex = /^\+\d{3}\.\d{8,}$/; // Ajustado según el patrón del HTML
-    // Solo validar si se ha ingresado un número
-    if (celular.value.trim() !== "" && !celularRegex.test(celular.value)) {
-        alert("Por favor, ingrese un número de celular válido con el formato: +[código de país].[número de celular].");
-        return false;
-    }
-    return true;
-}
-
-function validarDescripcionActividad() {
-    let descripcion = document.getElementById("descripcion");
-    if (descripcion.value.trim() !== "" && descripcion.value.trim().length === 0) {
-        alert("Por favor, ingrese una descripción de la actividad.");
-        return false;
-    }
-    return true;
-}
-
-function validarFotos() {
-    let fotos = document.getElementById("fotosContainer").querySelectorAll("input[type='file']");
-    let alMenosUnaSeleccionada = Array.from(fotos).some(input => input.files.length > 0);
-
-    if (!alMenosUnaSeleccionada) {
-        alert("Por favor, suba al menos una foto de referencia.");
-        return false;
-    }
-
-    return true;
-}
-
-function validarContacto() {
-    let contactoSelect = document.getElementById("contacto");
-    let contactoInfo = document.getElementById("contactoInfo");
-
-    if (contactoSelect.value !== "") {
-        let texto = contactoInfo.value.trim();
-        if (texto.length < 4 || texto.length > 50) {
-            alert("Por favor, escriba un ID o URL de contacto válido (entre 4 y 50 caracteres).");
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function validarTermino() {
-    let termino = document.getElementById("termino");
-    // Solo validamos si se ha ingresado una fecha de término
-    if (termino.value.trim() !== "" && new Date(termino.value) <= new Date(document.getElementById("inicio").value)) {
-        alert("La hora de término debe ser posterior a la hora de inicio.");
-        return false;
-    }
-    return true;
-}
 
 function validarFormularioActividad() {
-    return (
-        validarTema() &&
-        validarSector() &&
-        validarRegion() &&
-        validarComuna() &&
-        validarNombreOrganizador() &&
-        validarEmailOrganizador() &&
-        validarCelularOrganizador() &&
-        validarDescripcionActividad() &&
-        validarFotos() &&
-        validarContacto() &&
-        validarTermino()
-    );
+    const inicio = document.getElementById("fecha_inicio").value;
+    const termino = document.getElementById("fecha_termino").value;
+    const temas = document.querySelector("select[name='temas']").selectedOptions;
+    const glosa = document.querySelector("input[name='glosa_otro']");
+    const fotos = document.getElementById("fotos");
+    const correo = document.querySelector("input[name='correo']");
+    const organizador = document.querySelector("input[name='organizador']");
+    const sector = document.querySelector("input[name='sector']");
+    const comuna = document.querySelector("select[name='comuna']");
+    const region = document.querySelector("select[name='region']");
+    const telefono = document.querySelector("input[name='telefono']");
+    const metodos = document.querySelectorAll("select[name='metodo_nombre']");
+    const identificadores = document.querySelectorAll("input[name='identificador']");
+
+    if (!region.value || !comuna.value || !inicio || !correo.value || !organizador.value) {
+        alert("Por favor, completa todos los campos obligatorios.");
+        return false;
+    }
+
+    if (sector.value.length > 100) {
+        alert("El sector no puede tener más de 100 caracteres.");
+        return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(correo.value)) {
+        alert("Por favor, ingresa un correo electrónico válido.");
+        return false;
+    }
+
+    if (telefono.value && !/^\+\d{1,3}\.\d{7,15}$/.test(telefono.value)) {
+        alert("El teléfono debe tener el formato +569.12345678");
+        return false;
+    }
+
+    if(termino){
+        if (new Date(termino) <= new Date(inicio)) {
+            alert("La hora de término debe ser posterior a la de inicio.");
+            return false;
+    
+        }
+    }
+
+    const temaValues = Array.from(temas).map(t => t.value);
+    if (!temaValues.length) {
+        alert("Debes seleccionar al menos un tema.");
+        return false;
+    }
+    if (temaValues.includes("otro") && (!glosa || glosa.value.trim().length < 3 || glosa.value.length > 15)) {
+        alert("Si seleccionas 'otro' como tema, escribe una glosa válida (entre 3 y 15 caracteres).");
+        return false;
+    }
+
+    if (!fotos.files.length) {
+        alert("Debes subir al menos una foto.");
+        return false;
+    }
+    if (fotos.files.length > 5) {
+        alert("No puedes subir más de 5 fotos.");
+        return false;
+    }
+
+    if (metodos.length > 5) {
+        alert("Solo puedes ingresar hasta 5 métodos de contacto.");
+        return false;
+    }
+
+    for (let i = 0; i < identificadores.length; i++) {
+        const idVal = identificadores[i].value.trim();
+        if (idVal.length < 4 || idVal.length > 50) {
+            alert("Cada identificador debe tener entre 4 y 50 caracteres.");
+            return false;
+        }
+    }
+
+    return confirm("¿Está seguro que desea agregar esta actividad?");
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    let botonEnviar = document.getElementById("botonEnviarActividad");
-    if (botonEnviar) {
-        botonEnviar.addEventListener("click", function (event) {
-            event.preventDefault();
-            if (validarFormularioActividad()) {
-                if (confirm("¿Desea registrar esta actividad?")) {
-                    alert("La actividad ha sido registrada exitosamente. ¡Gracias!");
-                    window.location.href = "../html/index.html";
-                } else {
-                    alert("Registro cancelado. Puede continuar completando el formulario.");
-                }
-            }
-        });
-    }
-
-    let botonVolver = document.getElementById("volverIndex");
-    if (botonVolver) {
-        botonVolver.addEventListener("click", function () {
-            window.location.href = "../html/index.html";
-        });
-    }
-});

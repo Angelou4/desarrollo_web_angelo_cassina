@@ -2,13 +2,29 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/actividades.css">
     <title>Listado de Actividades</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/actividades.css') }}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td, th {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <h1>Listado de Actividades</h1>
-    <table id="tablaActividades">
+    <a href="{{ url_for('index') }}">← Volver al inicio</a>
+
+    <table>
         <thead>
             <tr>
                 <th>Inicio</th>
@@ -16,15 +32,38 @@
                 <th>Comuna</th>
                 <th>Sector</th>
                 <th>Tema</th>
-                <th>Nombre Organizador</th>
-                <th>Total Fotos</th>
+                <th>Nombre</th>
+                <th>Total fotos</th>
             </tr>
         </thead>
         <tbody>
+            {% for a in actividades %}
+            <tr onclick="location.href='{{ url_for('detalle_actividad', id=a.id) }}'">
+                <td>{{ a.dia_hora_inicio.strftime('%Y-%m-%d %H:%M') if a.dia_hora_inicio else '—' }}</td>
+                <td>{{ a.dia_hora_termino.strftime('%Y-%m-%d %H:%M') if a.dia_hora_termino else '—' }}</td>
+                <td>{{ a.comuna.nombre if a.comuna else '—' }}</td>
+                <td>{{ a.sector if a.sector else '—' }}</td>
+                <td>
+                    {% for t in a.temas %}
+                        {{ t.tema }}{% if t.tema == 'otro' and t.glosa_otro %} ({{ t.glosa_otro }}){% endif %}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ a.nombre }}</td>
+                <td>{{ a.fotos|length }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
-    <button id="volverIndex">Volver a Inicio</button>
+    <div style="margin-top: 20px;">
+        {% if pagination.has_prev %}
+            <a href="{{ url_for('ver_actividades', page=pagination.prev_num) }}">← Anterior</a>
+        {% endif %}
 
-    <script src="../js/ver-actividades.js"></script>
+        Página {{ pagination.page }} de {{ pagination.pages }}
+
+        {% if pagination.has_next %}
+            <a href="{{ url_for('ver_actividades', page=pagination.next_num) }}">Siguiente →</a>
+        {% endif %}
+    </div>
 </body>
 </html>

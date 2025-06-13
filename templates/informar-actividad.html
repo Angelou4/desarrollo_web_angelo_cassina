@@ -1,107 +1,115 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/actividades.css">
     <title>Informar Actividad</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/actividades.css') }}">
+    <script src="{{ url_for('static', filename='js/validar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cargar-comunas.js') }}"></script>
 </head>
 <body>
     <h1>Informar Actividad</h1>
-    
-    <form id="formularioProducto">
-        <h2>¿Dónde?:</h2>
-        <label for="region">Región:</label>
-        <select id="region" name="region" required>
-            <option value="">Selecciona...</option>
-        </select><br>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
 
-        <label for="comuna">Comuna:</label>
-        <select id="comuna" name="comuna" required>
-            <option value="">Selecciona...</option>
-        </select><br>
+    <form action="{{ url_for('informar_actividad') }}" method="POST" enctype="multipart/form-data" onsubmit="return validarFormularioActividad()">
+        <label>Fecha inicio: <input type="datetime-local" name="fecha_inicio" id="fecha_inicio" required></label><br>
+        <label>Fecha término: <input type="datetime-local" name="fecha_termino" id="fecha_termino"></label><br>
 
-        <label for="sector">Sector:</label><br>
-        <input type="text" id="sector" name="sector" maxlength="100"><br>
+        <label>Región:
+            <select name="region" id="region" required>
+                {% for region in regiones %}
+                <option value="{{ region.id }}">{{ region.nombre }}</option>
+                {% endfor %}
+            </select>
+        </label><br>
 
+        <label>Comuna:
+            <select name="comuna" id="comuna" required>
+                {% for comuna in comunas %}
+                <option value="{{ comuna.id }}">{{ comuna.nombre }}</option>
+                {% endfor %}
+            </select>
+        </label><br>
 
-        <h2>¿Quién organiza?:</h2>
-        <label for="nombre">Nombre:</label><br>
-        <input type="text" id="nombre" name="nombre" maxlength="200" required><br>
+        <label>Sector: <input type="text" name="sector" maxlength="100"></label><br>
 
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br>
+        <label>Temas:
+            <select name="temas" multiple required>
+                <option value="música">música</option>
+                <option value="deporte">deporte</option>
+                <option value="ciencias">ciencias</option>
+                <option value="religión">religión</option>
+                <option value="política">política</option>
+                <option value="tecnología">tecnología</option>
+                <option value="juegos">juegos</option>
+                <option value="baile">baile</option>
+                <option value="comida">comida</option>
+                <option value="otro">otro</option>
+            </select>
+        </label><br>
+        <label>Glosa si se seleccionó "Otro": <input type="text" name="glosa_otro"></label><br>
 
-        <label for="celular">Número de celular:</label><br>
-        <input type="tel" id="celular" name="celular" pattern="\+\d{3}\.\d{8,}"> <br>
- 
-        <label for="contacto">¿Cómo contactar?</label><br>
-        <select id="contacto" name="contacto" onchange="mostrarContacto()">
-            <option value="">Selecciona...</option>
-            <option value="whatsapp">WhatsApp</option>
-            <option value="telegram">Telegram</option>
-            <option value="x">X</option>
-            <option value="instagram">Instagram</option>
-            <option value="tiktok">TikTok</option>
-            <option value="otra">Otra</option>
-        </select>
-        <div id="contactoInfoContainer" style="display:none;">
-            <label for="contactoInfo">ID o URL de contacto:</label>
-            <input type="text" id="contactoInfo" name="contactoInfo" minlength="4" maxlength="50">
+        <label>Descripción:<br>
+            <textarea name="descripcion" rows="4" cols="50"></textarea>
+        </label><br>
+
+        <label for="fotos">Fotos:</label>
+        <input type="file" name="fotos" id="fotos" multiple><br>
+
+        <h3>Datos del organizador</h3>
+        <label>Nombre: <input type="text" name="organizador" maxlength="200" required></label><br>
+        <label>Correo: <input type="email" name="correo" maxlength="100" required></label><br>
+        <label>Teléfono: <input type="tel" name="telefono" placeholder="+569.12345678"></label><br>
+
+        <h3>Método de contacto</h3>
+        <div id="contactos">
+            <div class="contacto">
+                <label>Tipo:
+                    <select name="metodo_nombre">
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="telegram">Telegram</option>
+                        <option value="X">X</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="otra">Otra</option>
+                    </select>
+                </label>
+                <label>Identificador: <input type="text" name="identificador"></label>
+            </div>
         </div>
+        <button type="button" onclick="agregarContacto()">Agregar otro método de contacto</button><br>
 
-        <h2>¿Cuándo y de qué trata?</h2>
-        <label for="inicio">Día y hora de inicio:</label><br>
-        <input type="datetime-local" id="inicio" name="inicio" required><br>
-
-        <label for="termino">Día y hora de término:</label><br>
-        <input type="datetime-local" id="termino" name="termino"><br>
-
-        <label for="descripcion">Descripción:</label><br>
-        <textarea id="descripcion" name="descripcion" cols="50" rows="10"></textarea><br>
-
-        <label for="tema">Tema:</label>
-        <select id="tema" name="tema" onchange="mostrarOtroTema()" required>
-            <option value="">Selecciona...</option>
-            <option value="música">Música</option>
-            <option value="deporte">Deporte</option>
-            <option value="ciencias">Ciencias</option>
-            <option value="religión">Religión</option>
-            <option value="política">Política</option>
-            <option value="tecnología">Tecnología</option>
-            <option value="juegos">Juegos</option>
-            <option value="baile">Baile</option>
-            <option value="comida">Comida</option>
-            <option value="otro">Otro</option>
-        </select>
-        <div id="otroTemaContainer" style="display:none;">
-            <label for="otroTema">Describe el tema:</label>
-            <input type="text" id="otroTema" name="otroTema" minlength="3" maxlength="15">
-        </div>
-
-        <label for="foto">Fotos:</label><br>
-        <div id="fotosContainer">
-            <input type="file" id="foto" name="foto" accept="image/*" required>
-        </div>
-        <button type="button" onclick="agregarFoto()">Agregar otra foto</button><br><br>
-
-
-        <button type="button" onclick="confirmarActividad()">Agregar esta actividad</button>
+        <button type="submit">Agregar esta actividad</button>
     </form>
-    <div id="mensajeConfirmacion" style="display:none;">
-        <p>¿Está seguro que desea agregar esta actividad?</p>
-        <button onclick="enviarFormulario()">Sí, estoy seguro</button>
-        <button onclick="cancelarEnvio()">No, quiero volver al formulario</button>
-    </div>
 
-    <div id="mensajeFinal" style="display:none;">
-        <p>Hemos recibido su información, muchas gracias y suerte en su actividad.</p>
-        <button onclick="window.location.href='index.html'">Volver a la portada</button>
-    </div>
-
-    <script src="../js/actividad.js"></script>
-
-    <script src="../js/cargar-opciones.js"></script>
-    <script src="../js/validar.js"></script>
+    <script>
+    function agregarContacto() {
+        const div = document.createElement('div');
+        div.classList.add('contacto');
+        div.innerHTML = `
+            <label>Tipo:
+                <select name="metodo_nombre">
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="X">X</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="otra">Otra</option>
+                </select>
+            </label>
+            <label>Identificador: <input type="text" name="identificador"></label>
+        `;
+        document.getElementById('contactos').appendChild(div);
+    }
+    </script>
 </body>
 </html>

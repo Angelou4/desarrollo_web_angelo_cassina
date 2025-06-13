@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Actividades</title>
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 <body>
     <header>
         <h1>Bienvenidos</h1>
         <h2>Actividades</h2>
     </header>
+
     <div id="informarActividad" class="boton">Agregar actividad</div>
     <div id="verActividades" class="boton">Ver listado de actividades</div>
     <div id="estadisticas" class="boton">Estadísticas</div>
@@ -23,55 +24,44 @@
                     <th>Término</th>
                     <th>Comuna</th>
                     <th>Sector</th>
-                    <th>Tema</th>
+                    <th>Temas</th>
                     <th>Foto</th>
                 </tr>
             </thead>
             <tbody>
+                {% for act in actividades %}
                 <tr>
-                    <td>2025-03-28 12:00</td>
-                    <td>2025-03-28 14:00</td>
-                    <td>Santiago</td>
-                    <td>Beauchef</td>
-                    <td>Escuela de Boxeo</td>
-                    <td><img src="../imagenes/boxeo.jpg" alt="Escuela de Boxeo" width="100"></td>
+                    <td>{{ act.dia_hora_inicio.strftime('%d-%m-%Y %H:%M') }}</td>
+                    <td>
+                        {% if act.dia_hora_termino %}
+                            {{ act.dia_hora_termino.strftime('%d-%m-%Y %H:%M') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>{{ act.comuna.nombre }}</td>
+                    <td>{{ act.sector }}</td>
+                    <td>
+                        {% if act.temas %}
+                            {{ act.temas | map(attribute='tema') | join(', ') }}
+                        {% else %}
+                            Sin tema
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if act.fotos %}
+                            <img src="{{ url_for('static', filename=act.fotos[0].ruta_archivo ~ '/' ~ act.fotos[0].nombre_archivo) }}" alt="Foto de actividad" width="100">
+                        {% else %}
+                            Sin foto
+                        {% endif %}
+                    </td>
                 </tr>
-                <tr>
-                    <td>2025-03-29 19:00</td>
-                    <td>2025-03-29 20:00</td>
-                    <td>Ñuñoa</td>
-                    <td>Plaza</td>
-                    <td>Cómo deshidratar fruta</td>
-                    <td><img src="../imagenes/frutas.jpg" alt="Deshidratación de fruta" width="100"></td>
-                </tr>
-                <tr>
-                    <td>2022-03-30 18:00</td>
-                    <td>2022-03-30 19:00</td>
-                    <td>Santiago</td>
-                    <td>Parque O'Higgins</td>
-                    <td>Música urbana</td>
-                    <td><img src="../imagenes/musica.jpg" alt="Música urbana" width="100"></td>
-                </tr>
-                <tr>
-                    <td>2025-04-01 10:00</td>
-                    <td>2025-04-01 12:00</td>
-                    <td>Las Condes</td>
-                    <td>Centro</td>
-                    <td>Curso de cocina</td>
-                    <td><img src="../imagenes/cocinar.jpg" alt="Curso de cocina" width="100"></td>
-                </tr>
-                <tr>
-                    <td>2025-04-02 15:00</td>
-                    <td>2025-04-02 17:00</td>
-                    <td>La Florida</td>
-                    <td>Centro</td>
-                    <td>Charla sobre nutrición</td>
-                    <td><img src="../imagenes/nutricion.jpg" alt="Charla de nutrición" width="100"></td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </section>
 
-    <script src="../js/index.js"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>

@@ -1,36 +1,91 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estadísticas de Actividades</title>
-    <link rel="stylesheet" href="actividades.css">
+  <meta charset="UTF-8">
+  <title>Estadísticas</title>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .grafico-container {
+      margin: 40px auto;
+      max-width: 900px;
+    }
+    .grafico {
+      margin-bottom: 60px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Estadísticas de Actividades</h1>
 
-    <h1>Estadísticas de Actividades</h1>
+  <p><strong>Total de actividades registradas:</strong> {{ total }}</p>
 
-    <div class="grafico-container">
-        <div class="grafico">
-            <h2>Actividades por Día</h2>
-            <img src="../imagenes/grafico_lineas.png" alt="Gráfico de actividades por día">
-        </div>
-        
-        <div class="grafico">
-            <h2>Actividades por Tipo</h2>
-            <img src="../imagenes/grafico_torta.png" alt="Gráfico de actividades por tipo">
-        </div>
-        
- 
-        <div class="grafico">
-            <h2>Actividades por Mes y Franja Horaria</h2>
-            <img src="../imagenes/grafico_barra.png" alt="Gráfico de actividades por mes y franja horaria">
-        </div>
-    </div>
+  <div class="grafico-container">
+    <div id="grafico-dia" class="grafico"></div>
+    <div id="grafico-tema" class="grafico"></div>
+    <div id="grafico-mes-periodo" class="grafico"></div>
+  </div>
 
-    <div class="regresar-boton">
-        <button onclick="window.location.href='index.html'">Volver a la portada</button>
-    </div>
+  <script>
+    // Actividades por día
+    $.getJSON("/api/actividades_por_dia", function(data) {
+      Highcharts.chart('grafico-dia', {
+        chart: { type: 'line' },
+        title: { text: 'Actividades por día' },
+        xAxis: {
+          categories: data.map(e => e.fecha),
+          title: { text: 'Fecha' }
+        },
+        yAxis: {
+          title: { text: 'Cantidad de actividades' }
+        },
+        series: [{
+          name: 'Actividades',
+          data: data.map(e => e.cantidad)
+        }]
+      });
+    });
 
+    // Actividades por tema
+    $.getJSON("/api/actividades_por_tema", function(data) {
+      Highcharts.chart('grafico-tema', {
+        chart: { type: 'column' },
+        title: { text: 'Actividades por tema' },
+        xAxis: {
+          categories: data.map(e => e.tema),
+          title: { text: 'Tema' }
+        },
+        yAxis: {
+          title: { text: 'Cantidad' }
+        },
+        series: [{
+          name: 'Temas',
+          data: data.map(e => e.cantidad)
+        }]
+      });
+    });
+
+    // Actividades por mes y periodo
+    $.getJSON("/api/actividades_por_mes_y_periodo", function(datos) {
+      const categorias = Object.keys(datos).sort();
+      const series = ["mañana", "mediodía", "tarde"].map(periodo => ({
+        name: periodo,
+        data: categorias.map(mes => datos[mes][periodo] || 0)
+      }));
+
+      Highcharts.chart('grafico-mes-periodo', {
+        chart: { type: 'column' },
+        title: { text: 'Actividades por mes y periodo del día' },
+        xAxis: {
+          categories: categorias,
+          title: { text: 'Mes' }
+        },
+        yAxis: {
+          title: { text: 'Cantidad de actividades' }
+        },
+        series: series
+      });
+    });
+  </script>
 </body>
 </html>
