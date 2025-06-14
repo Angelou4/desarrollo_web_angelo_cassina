@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Actividades</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+    <header>
+        <h1>Bienvenidos</h1>
+        <h2>Actividades</h2>
+    </header>
+
+    <div id="informarActividad" class="boton">Agregar actividad</div>
+    <div id="verActividades" class="boton">Ver listado de actividades</div>
+    <div id="estadisticas" class="boton">Estadísticas</div>
+
+    <section>
+        <h2>Últimas 5 actividades agregadas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Inicio</th>
+                    <th>Término</th>
+                    <th>Comuna</th>
+                    <th>Sector</th>
+                    <th>Temas</th>
+                    <th>Foto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- JINJA: Inicio del bucle de actividades -->
+                {% for act in actividades %}
+                <tr>
+                    <td>{{ act.dia_hora_inicio.strftime('%d-%m-%Y %H:%M') }}</td>
+                    <td>
+                        {% if act.dia_hora_termino %}
+                            {{ act.dia_hora_termino.strftime('%d-%m-%Y %H:%M') }}
+                        {% else %}
+                            No especificado
+                        {% endif %}
+                    </td>
+                    <td>{{ act.comuna.nombre }}</td>
+                    <td>{{ act.sector or '—' }}</td>
+                    <td>
+                        {% if act.temas %}
+                            {{ act.temas | map(attribute='tema') | join(', ') }}
+                        {% else %}
+                            Sin tema
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if act.fotos %}
+                            <img src="{{ url_for('static', filename=act.fotos[0].ruta_archivo ~ '/' ~ act.fotos[0].nombre_archivo) }}"
+                                alt="Primera foto de {{ act.nombre }}" width="100">
+                        {% else %}
+                            Sin foto
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- JINJA: Fin del bucle -->
+            </tbody>
+        </table>
+    </section>
+
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>
