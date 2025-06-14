@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Detalle de Actividad</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/actividades.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/actividades.css') }}" type="text/css">
   <style>
     img.thumbnail {
       width: 320px;
@@ -51,13 +51,16 @@
   <h3>Fotos</h3>
   <div>
     {% for foto in actividad.fotos %}
-      <img src="{{ url_for('static', filename=foto.ruta_archivo + '/' + foto.nombre_archivo) }}" class="thumbnail" onclick="abrirModal(this.src)">
+      <img src="{{ url_for('static', filename=foto.ruta_archivo + '/' + foto.nombre_archivo) }}"
+        class="thumbnail"
+        onclick="abrirModal(this.src)"
+        alt="Imagen asociada a la actividad">
     {% endfor %}
   </div>
 
   <div id="modal">
     <button onclick="cerrarModal()">Cerrar ✖</button>
-    <img src="" id="modal-img">
+    <img src="{{ url_for('static', filename='img/placeholder.png') }}" id="modal-img" alt="Vista ampliada de la imagen seleccionada">
   </div>
 
   <h3>Comentarios</h3>
