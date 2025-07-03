@@ -1,0 +1,43 @@
+.boton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+    text-decoration: none;
+}
+
+.boton:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos de la tabla */
+table {
+    width: 100%; /* Para que ocupe todo el ancho disponible */
+    border-collapse: collapse; /* Hace que las celdas se toquen sin espacio */
+    margin-bottom: 20px; /* Espacio entre tablas */
+}
+
+th, td {
+    padding: 8px; /* Espaciado dentro de las celdas */
+    text-align: left; /* Alineación del texto */
+    border: 1px solid #ddd; /* Agrega un borde gris claro a cada celda */
+}
+
+th {
+    background-color: #f2f2f2; /* Fondo gris claro para los encabezados */
+}
+
+/* Opcional: estilo para las filas alternadas */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Fondo gris claro para las filas pares */
+}
+
+/* Opcional: línea al pasar el mouse sobre las filas */
+tbody tr:hover {
+    background-color: #e9e9e9; /* Fondo ligeramente más oscuro al pasar el mouse */
+}
